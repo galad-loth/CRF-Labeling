@@ -1,0 +1,2 @@
+The Graph Cut algorithm code is avaliable at the follow site(both C source code and matlab wrapper):
+http://vision.csd.uwo.ca/code/
