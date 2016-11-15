@@ -1,4 +1,4 @@
-clear; close all;clc
+function TestColorSeg()
 img=imread('E:\DevProj\Datasets\MiscData\BSD241004_C.png');
 figure(1);set(gcf,'position',[200 200 1200 750])
 subplot(2,2,1);imagesc(img);title('Original Image')
