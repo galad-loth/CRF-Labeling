@@ -21,6 +21,7 @@ dataInfo.colormap=colormap;
 dataInfo.className=className;
 dataInfo.normSize=512;
 dataInfo.numColorCluster=96;
+dataInfo.numTexton=128;
 
 function [colormap, className]=GetMSRC21Colormap()
 colormap=[
