@@ -2,6 +2,7 @@ function [modelLocation, modelColor]=TrainColorLocation(dataInfo)
 if isempty(dataInfo.trainImgList)
     error('The train image list is empty');
 end
+cform=makecform('srgb2lab');
 numClass=dataInfo.numClass;
 normSize=dataInfo.normSize;
 modelLocation=zeros(normSize*normSize,numClass);
@@ -16,6 +17,7 @@ for kk=1:numTrainImg
     imgFile=dataInfo.trainImgList{kk};
     gtImgFile=GetGtImgFile(imgFile, dataInfo.dataset);
     img=imread([dataInfo.imgPath,imgFile]);   
+    img=applycform(img,cform);
     gtImg=imread([dataInfo.gtPath,gtImgFile]);
     [nr,nc,nd]=size(img);
     [nrGt,ncGt,ndGt]=size(gtImg);

@@ -1,10 +1,12 @@
 function textonMap=GetTextonMap(modeltexton,imgPath,imgList)
 numImg=length(imgList);
 textonMap=cell(1,numImg);
+cform=makecform('srgb2lab');
 for kk=1:numImg
     disp(['Processing the ', num2str(kk),'-th image.']);
     imgFile=imgList{kk};
     img=imread([imgPath,imgFile]);
+    img=applycform(img,cform);
     img=double(img);
     [nr,nc,nd]=size(img);
     featTemp=TextonFiltering(img,modeltexton.filters);

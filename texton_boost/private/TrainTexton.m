@@ -1,17 +1,19 @@
 function modelTexton=TrainTexton(dataInfo)
-filters=makeLMfilters;
-numTrainImg=min(64,length(dataInfo.trainImgList));
+filters=MakeTextonFilters;
+cform=makecform('srgb2lab');
+numTrainImg=min(96,length(dataInfo.trainImgList));
 idxTraingImg=randperm(length(dataInfo.trainImgList));
 idxTraingImg=idxTraingImg(1:numTrainImg);
 
 numSampleFeatureOneImg=1000;
 numSampleFeature=numTrainImg*numSampleFeatureOneImg;
-sampleFeature=zeros(numSampleFeature,size(filters,3)*3);
+sampleFeature=zeros(numSampleFeature,17);
 for kk=1:numTrainImg
     disp(['Processing the ', num2str(kk),'-th image.']);
     imgFile=dataInfo.trainImgList{idxTraingImg(kk)};
     img=imread([dataInfo.imgPath,imgFile]);
-    img=double(img);
+    img=applycform(img,cform);
+    img=double(img);    
     [nr,nc,nd]=size(img);
     featTemp=TextonFiltering(img,filters);
     sampleFeature(((kk-1)*numSampleFeatureOneImg+1):kk*numSampleFeatureOneImg,:)= ...
@@ -32,7 +34,7 @@ matWhitten=eigVecs*diagEigVals*eigVecs';
 sampleFeatureWhitten=sampleFeature*matWhitten;
 
 disp('Perform K-Means clustering...')
-[~,clusterMean]=kmeans(sampleFeatureWhitten, dataInfo.numTexton,'MaxIter', 150);
+[~,clusterMean]=kmeans(sampleFeatureWhitten, dataInfo.numTexton,'MaxIter', 100);
 
 modelTexton.filters=filters;
 modelTexton.normMean=meanFeat;
