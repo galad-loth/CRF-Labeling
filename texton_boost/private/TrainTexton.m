@@ -8,16 +8,20 @@ idxTraingImg=idxTraingImg(1:numTrainImg);
 numSampleFeatureOneImg=1000;
 numSampleFeature=numTrainImg*numSampleFeatureOneImg;
 sampleFeature=zeros(numSampleFeature,17);
+sampleColor=zeros(numSampleFeature,3);
 for kk=1:numTrainImg
     disp(['Processing the ', num2str(kk),'-th image.']);
     imgFile=dataInfo.trainImgList{idxTraingImg(kk)};
     img=imread([dataInfo.imgPath,imgFile]);
-    img=applycform(img,cform);
-    img=double(img);    
     [nr,nc,nd]=size(img);
+    colorData=reshape(img, [nr*nc nd]);
+    img=applycform(img,cform);
+    img=double(img);     
     featTemp=TextonFiltering(img,filters);
     sampleFeature(((kk-1)*numSampleFeatureOneImg+1):kk*numSampleFeatureOneImg,:)= ...
             featTemp(round(linspace(1,nr*nc,numSampleFeatureOneImg)),:);
+    sampleColor(((kk-1)*numSampleFeatureOneImg+1):kk*numSampleFeatureOneImg,:)=...
+        colorData(round(linspace(1,nr*nc,numSampleFeatureOneImg)),:);
 end
 
 sampleFeature=sampleFeature(1:numSampleFeature,:);
@@ -34,10 +38,14 @@ matWhitten=eigVecs*diagEigVals*eigVecs';
 sampleFeatureWhitten=sampleFeature*matWhitten;
 
 disp('Perform K-Means clustering...')
-[~,clusterMean]=kmeans(sampleFeatureWhitten, dataInfo.numTexton,'MaxIter', 100);
-
+[idxCluster,clusterMean]=kmeans(sampleFeatureWhitten, dataInfo.numTexton,'MaxIter', 100);
+colormap=zeros(dataInfo.numTexton,nd);
+for k=1:dataInfo.numTexton
+    colormap(k,:)=mean(sampleColor(idxCluster==k,:),1);
+end
 modelTexton.filters=filters;
 modelTexton.normMean=meanFeat;
 modelTexton.normVar=stdFeat;
 modelTexton.matWhitten=matWhitten;
 modelTexton.textonMean=clusterMean;
+modelTexton.colormap=colormap;
