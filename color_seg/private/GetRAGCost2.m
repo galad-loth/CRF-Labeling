@@ -50,7 +50,7 @@ for ii=1:numSp
     for jj=ii+1:numSp
         if neighborWeights(ii,jj)==1
             diffColor=spMeanColor(ii,:)-spMeanColor(jj,:);
-            neighborWeights(ii,jj)=1-exp(-sum(diffColor.^2)/5000);
+            neighborWeights(ii,jj)=exp(-sum(diffColor.^2)/5000);
             neighborWeights(jj,ii)=neighborWeights(ii,jj);
         end
     end
