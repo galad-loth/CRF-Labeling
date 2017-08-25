@@ -22,9 +22,14 @@ dataInfo.className=className;
 dataInfo.normSize=512;
 dataInfo.numColorCluster=96;
 dataInfo.numTexton=128;
+dataInfo.regionLayout=int32([-9,9,-9,9; -15,15,-15,15; -21, 21,-21,21;
+    -18,0,-9,9;0,18,-9,9;-9,9,-18,0;-9,9,0,18;
+    -18,18,-9,0;-18,18,0,9;-9,0,-18,18;0,9,-18,18;
+    -18,-9,-18,-9;-18,-9,9,18;9,18,-18,-9;9,18,9,18]);
 
 function [colormap, className]=GetMSRC21Colormap()
 colormap=[
+    0,0,0,
     128,0,0;
     0,128,0;
     128,128,0;
